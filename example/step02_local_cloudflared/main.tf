@@ -86,10 +86,10 @@ resource "cloudflare_tunnel_config" "vmware_config" {
       # cloud-learning.site 로 요청이 들어오면 터널과 연결된 아래의 위치로 전달한다 
       hostname = var.domain_name
       # 인그래스 컨트롤러로 전달
-      # service  = "http://ingress-nginx-controller.ingress-nginx.svc.cluster.local:80" 
+      service  = "http://ingress-nginx-controller.ingress-nginx.svc.cluster.local:80" 
 
       # local cluster 의 svc 중에서 default 네임스페이스에 있는 nginx-svc 라는 이름의 서비스로 전달
-      service  = "http://nginx-svc.default.svc.cluster.local:80"
+      # service  = "http://nginx-svc.default.svc.cluster.local:80"
     }
     
     # 마지막 규칙: 매칭되는 도메인이 없으면 404 에러 반환 (필수 설정)
