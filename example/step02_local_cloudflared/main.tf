@@ -74,6 +74,7 @@ resource "cloudflare_record" "vmware_dns" {
   proxied = true
 }
 
+
 # --- 4. Tunnel 라우팅 규칙 (리버스 프록시 설정) -------------------------------
 # 터널로 들어온 트래픽을 사설망 어디로 보낼지 결정합니다.
 resource "cloudflare_tunnel_config" "vmware_config" {
@@ -127,3 +128,9 @@ resource "null_resource" "install_cloudflared_pod" {
     }
 }
 
+# 터널 토큰을 얻어내기 위한 블럭 
+output "tunnel_real_token" {
+  description = "Cloudflare Tunnel Token"
+  value       = cloudflare_tunnel.vmware_tunnel.tunnel_token
+  sensitive   = true  
+}
