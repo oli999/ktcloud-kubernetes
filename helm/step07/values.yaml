@@ -1,0 +1,7 @@
+# values.yaml 파일
+
+appSettings:
+  metadata:
+    author: "ktcloud"
+    team: "devops"
+    location: "seoul"
