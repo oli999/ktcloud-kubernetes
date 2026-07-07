@@ -55,3 +55,7 @@ kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.pas
 ### LoadBalancer 없이 vpn 망을 이용해서 접속 가능한것을 알수 있다
 
 ![alt text](image-6.png)
+
+### k8s 클러스터에 app 배포하는 방법
+
+![alt text](image-7.png)
