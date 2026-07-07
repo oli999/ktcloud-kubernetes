@@ -60,5 +60,10 @@ server {
     }
 }
 
+# 오타가 없는지 문법 체크
+sudo nginx -t
+
+# 설정을 시스템에 반영
+sudo systemctl reload nginx
 
 ```
