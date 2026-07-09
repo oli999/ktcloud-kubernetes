@@ -35,6 +35,12 @@ provider "helm" {
 }
 
 # helm provider 가 동작할 준비가 되어 있으면 "helm_release" 를 사용할수 있다.
+# 아래에서 ingress-nginx 를 설치하면
+# 서비스명 : ingress-nginx-controller
+# 네임스페이스 : ingress-nginx 
+# 로 설정된다.
+# 아래의 cloudflared 의 설정값으로 활용된다.
+# service  = "http://ingress-nginx-controller.ingress-nginx.svc.cluster.local:80"
 resource "helm_release" "ingress_nginx" {
   name             = "ingress-nginx"
   # helm 저장소의 위치

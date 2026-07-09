@@ -43,14 +43,15 @@ resource "helm_release" "argocd" {
   create_namespace = true
   # my-values.yaml 파일을 읽어서 설치 하도록 한다 
   values = [ file("${path.module}/my-values.yaml") ]
+  # 초기 비밀번호를 직접 설정하기 
   set {
     name  = "configs.secret.argocdServerAdminPassword"
     # htpasswd (bcrypt) 형태로 변환하여 주입
     value = bcrypt("@abcd1234") 
   }
-  # ArgoCD 핵심 서버 서비스 타입을 ClusterIP로 강제 지정!
-  set {
-    name  = "server.service.type"
-    value = "ClusterIP"
-  }
+  # ArgoCD 핵심 서버 서비스 타입을 여기서도 변경할수 있다 ClusterIP or LoadBalancer
+  # set {
+  #   name  = "server.service.type"
+  #   value = "LoadBalancer"
+  # }
 }
