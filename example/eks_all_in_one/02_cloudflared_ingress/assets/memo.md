@@ -1,4 +1,14 @@
 
+### 아키텍쳐 확인 
+
+![alt text](image.png)
+
+
+
+
+
+
+
 # AWS CLI를 이용해 접속 정보 가져오기
 aws eks update-kubeconfig --region ap-northeast-2 --name hello-eks
 # context 목록 얻어오기 

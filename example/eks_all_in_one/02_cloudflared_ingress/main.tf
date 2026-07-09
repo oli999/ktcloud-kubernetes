@@ -22,7 +22,7 @@ terraform {
   }
 }
 
-# 클러스터 접속정보 (local k8s 를 바라 보도록 context 가 변경되어 있어야 한다)
+# 클러스터 접속정보 (eks 를 바라 보도록 context 가 변경되어 있어야 한다)
 provider "kubernetes" {
   config_path = "~/.kube/config"
 }
@@ -46,6 +46,7 @@ resource "helm_release" "ingress_nginx" {
   # namespace 설정 
   namespace        = "ingress-nginx"
   create_namespace = true
+  # 서비스 type 을 LoadBalancer 가 아닌 ClusterIP type 으로 만들어 지도록 설정
   set {
     name  = "controller.service.type"
     value = "ClusterIP"
@@ -115,21 +116,20 @@ resource "cloudflare_tunnel" "eks_tunnel" {
 #   proxied = true
 # }
 
-# 1. 🌟 사용할 모든 도메인/서브도메인 이름을 리스트로 선언합니다.
+# 1. 사용할 모든 도메인/서브도메인 이름을 리스트로 선언합니다.
 locals {
   # "@" = cloud-learning.site (루트 도메인)
   # 나머지 = argocd.cloud-learning.site 등등
   my_domains = [
     "@", 
     "argocd", 
-    "grafana", 
-    "prometheus",
-    "www"
+    "grafana"
   ]
 }
 
 # 2. 반복문(for_each)을 돌려 한 번에 CNAME 레코드를 쫙 찍어냅니다.
 resource "cloudflare_record" "eks_dns" {
+  # 반복문
   for_each = toset(local.my_domains)
 
   zone_id  = var.cloudflare_zone_id
@@ -148,13 +148,13 @@ resource "cloudflare_tunnel_config" "eks_config" {
   tunnel_id  = cloudflare_tunnel.eks_tunnel.id
 
   config {
-    # 🌟 [추가] 서브도메인(argocd, grafana 등)을 모두 Nginx로 통과시킴
+    # 첫번째 규칙: 서브도메인(argocd, grafana 등)을 모두 Nginx로 통과시킴
     ingress_rule {
       hostname = "*.${var.domain_name}" 
       service  = "http://ingress-nginx-controller.ingress-nginx.svc.cluster.local:80"
     }
 
-    # 첫 번째 규칙: 지정한 도메인으로 들어오면 eks 내부 서비스로 전달
+    # 두번째 규칙: 지정한 도메인으로 들어오면 eks 내부 서비스로 전달
     ingress_rule {
       hostname = var.domain_name
       # nginx ingress controller 로 전달하기
