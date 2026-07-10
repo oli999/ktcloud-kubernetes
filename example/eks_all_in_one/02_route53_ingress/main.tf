@@ -46,6 +46,7 @@ data "aws_route53_zone" "selected" {
   private_zone = false
 }
 
+# hosting 영역에 등록한 domain 에 대해서 미리 발급받아놓았던 인증서 정보 얻어내기 
 data "aws_acm_certificate" "issued_cert" {
   domain      = "*.${var.domain_name}"
   statuses    = ["ISSUED"]
