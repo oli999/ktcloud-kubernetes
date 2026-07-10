@@ -1,0 +1,16 @@
+"all":
+  "children":
+    "master":
+      "hosts":
+        "k8s-master":
+          "ansible_host": "10.20.2.37"
+    "workers":
+      "hosts":
+        "k8s-worker-1":
+          "ansible_host": "10.20.2.36"
+        "k8s-worker-2":
+          "ansible_host": "10.20.2.127"
+  "vars":
+    "ansible_python_interpreter": "/usr/bin/python3"
+    "ansible_ssh_private_key_file": "./k8s-lab-key.pem"
+    "ansible_user": "ubuntu"
