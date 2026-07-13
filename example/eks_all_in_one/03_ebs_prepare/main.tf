@@ -76,6 +76,7 @@ resource "aws_eks_addon" "ebs_csi" {
 # 3. EBS용 StorageClass (gp3 타입 지정)
 # ---------------------------------------------------------
 resource "kubernetes_storage_class_v1" "ebs_sc" {
+  # 여기의 name 과 postgres/templates/cnpg-cluster.yaml 파일안에 있는 storage class name 과 일치해야 한다 
   metadata { name = "ebs-gp3" }
   
   storage_provisioner = "ebs.csi.aws.com"
