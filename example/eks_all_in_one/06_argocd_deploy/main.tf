@@ -194,7 +194,8 @@ resource "argocd_application" "image-app" {
       target_revision = "master"
       
       # 2. Chart.yaml이 들어있는 폴더 경로 지정
-      path            = "efs_test_service" 
+      # path            = "efs_test_service" 
+      path            = "efs_test_service_cloudfront"
       
     }
     
