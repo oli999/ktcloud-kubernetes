@@ -12,3 +12,5 @@
 crash.log
 
 terraform.tfvars
+
+**/code_push_tunnel/
