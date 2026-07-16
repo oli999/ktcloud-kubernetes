@@ -97,7 +97,7 @@ data "kubernetes_service_v1" "ingress_nginx_svc" {
 }
 
 
-# 와일드카드 도메인(*.cloud-study.site)도 추가 매핑
+# 와일드카드 도메인(*.cloud-study.site) 매핑
 resource "aws_route53_record" "wildcard" {
   zone_id = data.aws_route53_zone.selected.zone_id
   name    = "*.${var.domain_name}"
