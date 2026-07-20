@@ -197,3 +197,15 @@ docker tag  member-app:1.0  172.16.8.40/test/member-app:v1.0
 docker push 172.16.8.40/test/member-app:v1.0
 
 ```
+
+### deploy yaml 에서  이미지명만 잘 작성하면 동일하게 동작한다
+
+```yaml
+spec:
+  containers:
+  - name: member-app-ctn
+  # 핵심: 여기에 Harbor 주소를 포함한 전체 이미지 경로를 적어줍니다!
+  image: 172.16.8.40/test/member-app:v1.0
+  ports:
+  - containerPort: 8000
+```
