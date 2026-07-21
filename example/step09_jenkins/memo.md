@@ -20,3 +20,22 @@ helm install my-jenkins jenkins/jenkins -f jenkins-values.yaml -n jenkins
 <img src="./assets/image01.png">
 <img src="./assets/image02.png">
 <img src="./assets/image03.png">
+
+### jenkins 를 활용한 배포의 구조
+
+<img src="./assets/image04.png">
+
+### timezone 설정
+
+<img src="./assets/image05.png">
+<img src="./assets/image06.png">
+
+### groovy 테스트 console 
+
+<img src="./assets/image07.png">
+
+### jenkins 플러그인 설치
+
+<img src="./assets/image14.png">
+<img src="./assets/image15.png">
+<img src="./assets/image16.png">
