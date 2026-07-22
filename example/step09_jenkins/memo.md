@@ -59,3 +59,19 @@ helm install my-jenkins jenkins/jenkins -f jenkins-values.yaml -n jenkins
 <img src="./assets/image24.png">
 <img src="./assets/image25.png">
 <img src="./assets/image26.png">
+<img src="./assets/image27.png">
+<img src="./assets/image28.png">
+
+### gitea 에 push 가 되면 jenkens 서버의 webhook 을 호출하도록 설정
+
+<img src="./assets/image29.png">
+<img src="./assets/image30.png">
+<img src="./assets/image31.png">
+<img src="./assets/image32.png">
+
+### gittea 에 webhook 호출 설정
+
+<img src="./assets/image33.png">
+<img src="./assets/image34.png">
+<img src="./assets/image35.png">
+<img src="./assets/image36.png">
