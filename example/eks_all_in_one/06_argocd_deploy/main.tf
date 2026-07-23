@@ -139,79 +139,79 @@ output "argocd_server_ip" {
 }
 
 
-resource "argocd_application" "postgres-app" {
-  metadata {
-    name      = "postgres-app"
-    namespace = "argocd"
-  }
-  spec {
-    project = "default"
-    source {
-      # 1. 일반 Git 저장소 주소
-      repo_url        = "https://github.com/oli999/argocd_deploy.git"
-      target_revision = "master"
+# resource "argocd_application" "postgres-app" {
+#   metadata {
+#     name      = "postgres-app"
+#     namespace = "argocd"
+#   }
+#   spec {
+#     project = "default"
+#     source {
+#       # 1. 일반 Git 저장소 주소
+#       repo_url        = "https://github.com/oli999/argocd_deploy.git"
+#       target_revision = "master"
       
-      # 2. Chart.yaml이 들어있는 폴더 경로 지정
-      path            = "postgres" 
+#       # 2. Chart.yaml이 들어있는 폴더 경로 지정
+#       path            = "postgres" 
       
-      # 3. 폴더가 Helm 구조라면 helm 블록을 통해 값을 제어할 수 있습니다!
-      # helm {
-      #   # Git 폴더 안에 있는 특정 values 파일을 덮어쓰고 싶을 때
-      #   value_files = ["values-prod.yaml"] 
+#       # 3. 폴더가 Helm 구조라면 helm 블록을 통해 값을 제어할 수 있습니다!
+#       # helm {
+#       #   # Git 폴더 안에 있는 특정 values 파일을 덮어쓰고 싶을 때
+#       #   value_files = ["values-prod.yaml"] 
         
-      #   # 또는 개별 변수를 직접 꽂아 넣고 싶을 때
-      #   parameter {
-      #     name  = "image.tag"
-      #     value = "v1.0.5"
-      #   }
-      # }
-    }
+#       #   # 또는 개별 변수를 직접 꽂아 넣고 싶을 때
+#       #   parameter {
+#       #     name  = "image.tag"
+#       #     value = "v1.0.5"
+#       #   }
+#       # }
+#     }
     
-    destination {
-      server    = "https://kubernetes.default.svc"
-      namespace = "default" 
-    }
-    sync_policy {
-      automated {
-        prune       = true
-        self_heal   = true
-      }
-      sync_options = ["CreateNamespace=true"]
-    }
-  }  
-}
+#     destination {
+#       server    = "https://kubernetes.default.svc"
+#       namespace = "default" 
+#     }
+#     sync_policy {
+#       automated {
+#         prune       = true
+#         self_heal   = true
+#       }
+#       sync_options = ["CreateNamespace=true"]
+#     }
+#   }  
+# }
 
-resource "argocd_application" "image-app" {
-  metadata {
-    name      = "image-app"
-    namespace = "argocd"
-  }
-  spec {
-    project = "default"
-    source {
-      # 1. 일반 Git 저장소 주소
-      repo_url        = "https://github.com/oli999/argocd_deploy.git"
-      target_revision = "master"
+# resource "argocd_application" "image-app" {
+#   metadata {
+#     name      = "image-app"
+#     namespace = "argocd"
+#   }
+#   spec {
+#     project = "default"
+#     source {
+#       # 1. 일반 Git 저장소 주소
+#       repo_url        = "https://github.com/oli999/argocd_deploy.git"
+#       target_revision = "master"
       
-      # 2. Chart.yaml이 들어있는 폴더 경로 지정
-      # path            = "efs_test_service" 
-      path            = "efs_test_service_cloudfront"
+#       # 2. Chart.yaml이 들어있는 폴더 경로 지정
+#       # path            = "efs_test_service" 
+#       path            = "efs_test_service_cloudfront"
       
-    }
+#     }
     
-    destination {
-      server    = "https://kubernetes.default.svc"
-      namespace = "default" 
-    }
-    sync_policy {
-      automated {
-        prune       = true
-        self_heal   = true
-      }
-      sync_options = ["CreateNamespace=true"]
-    }
-  }  
-}
+#     destination {
+#       server    = "https://kubernetes.default.svc"
+#       namespace = "default" 
+#     }
+#     sync_policy {
+#       automated {
+#         prune       = true
+#         self_heal   = true
+#       }
+#       sync_options = ["CreateNamespace=true"]
+#     }
+#   }  
+# }
 
 
 # resource "argocd_application" "microservice-app" {
