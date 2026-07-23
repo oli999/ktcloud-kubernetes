@@ -75,3 +75,57 @@ helm install my-jenkins jenkins/jenkins -f jenkins-values.yaml -n jenkins
 <img src="./assets/image34.png">
 <img src="./assets/image35.png">
 <img src="./assets/image36.png">
+
+### [ci skip] 문자열을 활용해서 필요없는 pipeline 이 동작하지 않도록 필터링 하기
+
+<img src="./assets/image37.png">
+
+#### 아래는 getea 가 webhook 을 날릴때 jenkins 에게 전송하는 json 문자열이다 
+```json
+{
+  "ref": "refs/heads/master",
+  "before": "28e1879d029cb852e4844d9c718537df08844e03",
+  "after": "bffeb74224043ba2feb48d137756c8a9331c449a",
+  "compare_url": "http://172.16.8.42/admin/argocd_deploy/compare/28e1879d02...bffeb74",
+  
+  "commits": [
+    {
+      "id": "bffeb74224043ba2feb48d137756c8a9331c449a",
+      "message": "Update image tags to v5 [ci skip]", 
+      "url": "http://172.16.8.42/admin/argocd_deploy/commit/bffeb74224043ba...",
+      "author": {
+        "name": "Jenkins-CI",
+        "email": "jenkins@cicd.local",
+        "username": "admin"
+      },
+      "added": [],
+      "removed": [],
+      "modified": [
+        "hello/values.yaml"
+      ]
+    }
+  ],
+  
+  "repository": {
+    "id": 1,
+    "name": "argocd_deploy",
+    "full_name": "admin/argocd_deploy",
+    "html_url": "http://172.16.8.42/admin/argocd_deploy",
+    "clone_url": "http://172.16.8.42/admin/argocd_deploy.git",
+    "default_branch": "master",
+    "owner": {
+      "login": "admin",
+      "email": "admin@example.com"
+    }
+  },
+  
+  "pusher": {
+    "login": "admin",
+    "email": "admin@example.com",
+    "username": "admin"
+  }
+}
+```
+
+<img src="./assets/image38.png">
+<img src="./assets/image39.png">
