@@ -17,7 +17,7 @@ provider "aws" {
 resource "aws_ecr_repository" "member-app" {
   name                 = "member-app" # 창고 이름
   image_tag_mutability = "MUTABLE"        # 동일한 태그(v1) 덮어쓰기 허용
-
+  force_delete = true
   image_scanning_configuration {
     scan_on_push = true                   # 이미지 올릴 때마다 보안 취약점 검사 (필수!)
   }

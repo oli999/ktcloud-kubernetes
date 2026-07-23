@@ -153,3 +153,19 @@ pipeline {
 }
 ```
 
+#### 3. Jenkins Pipeline 생성
+
+
+
+
+# 1. 내용이 없는 빈 커밋 생성
+git commit --allow-empty -m "Trigger webhook test"
+
+# 2. GitHub으로 푸시 (현재 브랜치명에 맞게 master 또는 main 입력)
+git push origin master
+
+# 1. 젠킨스가 올린 최신 커밋을 가져와서 내 빈 커밋과 부드럽게 합치기
+git pull --rebase origin master
+
+# 2. 이제 아무 걸림돌이 없으니 다시 Push를 날려줍니다!
+git push origin master

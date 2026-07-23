@@ -139,6 +139,8 @@ output "argocd_server_ip" {
 }
 
 
+
+
 # resource "argocd_application" "postgres-app" {
 #   metadata {
 #     name      = "postgres-app"
