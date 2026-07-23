@@ -129,7 +129,8 @@ locals {
   my_domains = [
     "@", 
     "argocd", 
-    "grafana"
+    "grafana",
+    "jenkins"
   ]
 }
 
@@ -194,6 +195,14 @@ resource "null_resource" "install_cloudflared_pod" {
 
     provisioner "local-exec" {
         command = "ansible-playbook -i localhost, -c local playbook-kubectl.yml --extra-vars 'tunnel_token=${cloudflare_tunnel.eks_tunnel.tunnel_token}'"
+    }
+    # terraform destroy 했을때 deploy 와 secret 도 같이 삭제 되도록 한다.
+    provisioner "local-exec"{
+      when = destroy
+      command = <<-EOF
+        kubectl delete -f deploy-cloudflared.yaml
+        kubectl delete secret tunnel-credentials -n k8s --ignore-not-found=true
+      EOF
     }
 }
 

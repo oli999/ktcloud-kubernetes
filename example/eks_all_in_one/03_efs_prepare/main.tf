@@ -142,6 +142,8 @@ resource "kubernetes_storage_class_v1" "efs_sc" {
     provisioningMode = "efs-ap" # Access Point를 자동으로 생성해 주는 모드 
     fileSystemId     = aws_efs_file_system.eks_efs.id
     directoryPerms   = "700"
+    uid              = "1000"  # 🟢 폴더 소유자를 젠킨스와 똑같은 1000으로 강제 지정
+    gid              = "1000"
   }
 }
 
