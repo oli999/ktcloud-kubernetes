@@ -46,3 +46,10 @@ helm install my-jenkins jenkins/jenkins -f jenkins-values.yaml -n jenkins
 <img src="./assets/image14.png">
 <img src="./assets/image15.png">
 <img src="./assets/image16.png">
+
+kubectl create secret generic jenkins-secrets \
+  --from-literal=harbor-username="admin" \
+  --from-literal=harbor-password="Harbor실제비밀번호" \
+  --from-literal=gitea-username="강사님gitea아이디" \
+  --from-literal=gitea-token="Gitea실제비밀번호_또는_토큰" \
+  -n jenkins
