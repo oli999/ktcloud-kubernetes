@@ -1,0 +1,118 @@
+controller:
+  # 젠킨스 웹 UI 접속 방식 (MetalLB를 활용한 LoadBalancer)
+  serviceType: LoadBalancer
+  
+  # 고정 IP MetalLB 대역 
+  loadBalancerIP: "172.16.8.41"
+
+  # 젠킨스가 내부적으로 인식할 공식 주소를 아예 Helm 배포 단계에서 주입
+  jenkinsUrl: "http://172.16.8.41:8080/"
+  
+  # 관리자 초기 비밀번호 
+  admin:
+    password: "admin1234"
+    
+  # 젠킨스 시작 시 자동으로 설치할 플러그인 목록
+  installPlugins:
+    - kubernetes:latest              # K8s 에이전트(일꾼 파드) 구동용
+    - workflow-aggregator:latest     # Pipeline(Jenkinsfile) 핵심 기능
+    - git:latest                     # Git 연동
+    - configuration-as-code:latest   # JCasC 기능 (필수)
+    - job-dsl:latest                 # 코드로 파이프라인(Job) 생성 기능
+    - generic-webhook-trigger:latest # Gitea/GitHub 웹훅 및 [ci skip] 필터링용
+    
+  # 🚨 수정: JCasC 설정 구조를 configScripts 하위로 안전하게 통합했습니다.
+  JCasC:
+    defaultConfig: true
+    configScripts:
+      # 1. 자격 증명 (Credentials) 설정
+      credentials: |
+        credentials:
+          system:
+            domainCredentials:
+              - credentials:
+                  # Harbor 자격 증명
+                  - usernamePassword:
+                      scope: GLOBAL
+                      id: "harbor-cred"
+                      username: "${HARBOR_USERNAME}"
+                      password: "${HARBOR_PASSWORD}"
+                      description: "Harbor Registry Credentials"
+                  # Gitea 자격 증명
+                  - usernamePassword:
+                      scope: GLOBAL
+                      id: "gitea-cred"
+                      username: "${GITEA_USERNAME}"
+                      password: "${GITEA_TOKEN}"
+                      description: "Gitea Access Token or Password"
+
+      # 🚨 수정: 2. 파이프라인(Job) 자동 생성 (JCasC 공식 문법 적용)
+      pipelines: |
+        jobs:
+          - script: >
+              pipelineJob('hello-ci') {
+                // 1. 트리거(Webhook) 및 커밋 메시지 필터링 설정
+                triggers {
+                  genericTrigger {
+                    genericVariables {
+                      genericVariable {
+                        key('COMMIT_MSG')
+                        value('$.commits[0].message')
+                        expressionType('JSONPath')
+                      }
+                    }
+                    token('gitea-hello-ci-token') 
+                    regexpFilterText('$COMMIT_MSG')
+                    regexpFilterExpression('^(?!.*\\[ci skip\\]).*')
+                  }
+                }
+                // 2. SCM(Git) 소스 코드 연결 설정
+                definition {
+                  cpsScm {
+                    scm {
+                      git {
+                        remote { 
+                          url('http://172.16.8.42/admin/argocd_deploy.git')
+                          credentials('gitea-cred') 
+                        }
+                        branches('master')
+                      }
+                    }
+                    scriptPath('hello/Jenkinsfile')
+                  }
+                }
+              }
+
+  # 🚨 젠킨스 컨테이너에 환경 변수로 실제 비밀번호를 주입하는 곳
+  env:
+    - name: HARBOR_USERNAME
+      valueFrom:
+        secretKeyRef:
+          name: jenkins-secrets
+          key: harbor-username
+    - name: HARBOR_PASSWORD
+      valueFrom:
+        secretKeyRef:
+          name: jenkins-secrets
+          key: harbor-password
+    - name: GITEA_USERNAME
+      valueFrom:
+        secretKeyRef:
+          name: jenkins-secrets
+          key: gitea-username
+    - name: GITEA_TOKEN
+      valueFrom:
+        secretKeyRef:
+          name: jenkins-secrets
+          key: gitea-token
+          
+  overwritePlugins: false
+
+# 🚨 수정: RBAC는 controller 내부가 아니라 최상단에 있어야 합니다!
+rbac:
+  create: true
+
+persistence:
+  enabled: true
+  size: "3Gi"
+  storageClass: "nfs-client"
