@@ -77,6 +77,7 @@ resource "argocd_application" "hello_app" {
 }
 
 
+
 # # 배포할 app 구성하기
 # resource "argocd_application" "microservice_app"{
 #     # 배포할 app 의 이름과 namespace 를 명시 한다 
