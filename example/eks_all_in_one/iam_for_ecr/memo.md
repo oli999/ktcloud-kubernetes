@@ -7,3 +7,6 @@
 terraform output -raw jenkins_ecr_secret_access_key
 ```
 
+### iam user 정보를 jenkins 서버에 등록을 해야 한다 
+
+<img src="./assets/image01.png">

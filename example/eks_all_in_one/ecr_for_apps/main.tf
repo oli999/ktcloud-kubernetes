@@ -28,8 +28,8 @@ variable "app_names" {
 resource "aws_ecr_repository" "hello_apps" {
   # 반복적으로 실행하기 위해
   for_each = toset(var.app_names)
-  # hello-apps-fortune, hello-apps-greet, ... 등의 이름으로 만들어 지도록 한다
-  name = "hello-apps-${each.key}"
+  # fortune, greet, ... 등의 이름으로 만들어 지도록 한다
+  name = "${each.key}"
   image_tag_mutability = "MUTABLE"
   # terraform destroy 했을때 이미지가 존재하더라도 지워 지도록 한다 (테스트 이기 때문에 상관 없음)
   force_delete = true

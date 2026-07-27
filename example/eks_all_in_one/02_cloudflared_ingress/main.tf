@@ -129,7 +129,8 @@ locals {
   my_domains = [
     "@", 
     "argocd", 
-    "grafana"
+    "grafana",
+    "jenkins"  # https://jenkins.cloud-learning.site 로 접속 가능하게 하기 위해 추가 
   ]
 }
 
