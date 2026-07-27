@@ -47,7 +47,7 @@ resource "helm_release" "argocd" {
   set {
     name  = "configs.secret.argocdServerAdminPassword"
     # htpasswd (bcrypt) 형태로 변환하여 주입
-    value = bcrypt("@abcd1234") 
+    value = bcrypt("@admin1234") 
   }
   # ArgoCD 핵심 서버 서비스 타입을 여기서도 변경할수 있다 ClusterIP or LoadBalancer
   # set {
