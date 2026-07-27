@@ -71,7 +71,7 @@ resource "argocd_application" "hello_app" {
           prune = true
           self_heal = true
         }
-        sync_options = ["CreateNameSpace=true"]
+        sync_options = ["CreateNamespace=true"]
     }
   }
 }
