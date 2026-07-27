@@ -30,5 +30,12 @@
 <img src="./assets/image16.png">
 <img src="./assets/image17.png">
 
+### generic webhook 플러그인 설치
 
+<img src="./assets/image18.png">
+
+ ### cloudflared security rule
+
+ <img src="./assets/image20.png">
+ <img src="./assets/image19.png">
  
