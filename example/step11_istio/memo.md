@@ -15,7 +15,14 @@ cd istio-*
 sudo cp bin/istioctl /usr/local/bin/
 
 # 4. 정상적으로 설치되었는지 버전 확인 (worker node 에 socat 이 설치 안되어 있으면 에러나는데 상관없음)
-istioctl version
+# istioctl version
+
+# 5. Istio Ingress Gateway 클러스터에 배포하기
+# 쿠버네티스 클러스터에 Istio 기본 구성요소(Gateway 포함)를 쫙 깔아줍니다.
+istioctl install --set profile=default -y
+
+# 6. 명령어가 성공적으로 끝나면 kubectl get svc -n istio-system을 쳐서 istio-ingressgateway가 정상적으로 떴는지 확인해 주시면 됩니다.
+kubectl get svc -n istio-system
 ```
 
 
@@ -44,4 +51,23 @@ kubectl label namespace default istio-injection=enabled --overwrite
 kubectl apply -f msa-apps.yaml
 kubectl apply -f msa-routing.yaml
 kubectl apply -f msa-security.yaml
+```
+
+### Kiali 설치및 접속 
+
+```bash
+# 아까 압축을 해제했던 istio-1.x.x 폴더 안으로 이동합니다.
+cd ~/kubernetes/example/step11_istio/deploy/istio-*
+
+
+# 데이터 수집기(Prometheus) 설치
+kubectl apply -f samples/addons/prometheus.yaml
+
+# 시각화 대시보드(Kiali) 설치
+kubectl apply -f samples/addons/kiali.yaml
+
+# MetalLB를 이용해 외부 접속 열어주기
+kubectl patch svc kiali -n istio-system -p '{"spec": {"type": "LoadBalancer"}}'
+
+kubectl get svc kiali -n istio-system
 ```
