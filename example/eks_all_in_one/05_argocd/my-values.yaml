@@ -8,3 +8,9 @@ server:
   # cloudflared 또는 route53 을 거쳐서 https 처리는 다되어서 들어오기 때문에 --insecure 로 설정한다 
   extraArgs:
     - --insecure
+# argocd-values.yaml
+configs:
+  secret:
+    # argocd-secret 자원에 동적으로 데이터를 추가해 주는 옵션입니다.
+    extra:
+      webhook.github.secret: "my-token"

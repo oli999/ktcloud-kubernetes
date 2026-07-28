@@ -37,8 +37,18 @@ module "vpc" {
   azs             = ["ap-northeast-2a", "ap-northeast-2c"]
   # k8s node 들이 배치되는 subnet 대역
   private_subnets = ["10.0.1.0/24", "10.0.2.0/24"]
+  # [핵심 변경] 프라이빗 서브넷 대역 대폭 확장 (/24 -> /20)
+  # /20 은 서브넷당 4,096개의 IP를 제공합니다. 
+  # Prefix Delegation을 켜고 maxPods를 64개로 늘려도 IP 고갈 걱정이 전혀 없습니다.
+  # private_subnets = ["10.0.16.0/20", "10.0.32.0/20"]
+
   # LB 또는 NAT 들이 배치되는 subnet 대역
   public_subnets  = ["10.0.101.0/24", "10.0.102.0/24"]
+
+  # 퍼블릭 서브넷 대역 (앞으로 당겨서 깔끔하게 정리)
+  # 퍼블릭에는 파드가 띄워지지 않고 ALB(로드밸런서)나 NAT 게이트웨이만 배치되므로 
+  # 기존과 같은 /24 (251개 IP)로도 아주 충분합니다.
+  # public_subnets  = ["10.0.1.0/24", "10.0.2.0/24"]
 
   enable_nat_gateway = true
   single_nat_gateway = true
