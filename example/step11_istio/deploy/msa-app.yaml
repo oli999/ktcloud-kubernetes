@@ -1,0 +1,137 @@
+# 1. Index Service
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deploy-fastapi-index
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fastapi-index
+  template:
+    metadata:
+      labels:
+        app: fastapi-index
+    spec:
+      containers:
+      - name: fastapi-index
+        image: myoli999/micro-index:1.0
+        ports:
+        - containerPort: 8000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc-fastapi-index
+spec:
+  selector:
+    app: fastapi-index
+  ports:
+  - protocol: TCP
+    port: 8000
+    targetPort: 8000
+
+---
+# 2. User Service (🚨 단서 1번: 이름 고정)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deploy-fastapi-user
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fastapi-user
+  template:
+    metadata:
+      labels:
+        app: fastapi-user
+    spec:
+      containers:
+      - name: fastapi-user
+        image: myoli999/micro-user:1.0
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc-fastapi-user  # Python 코드의 iss와 정확히 일치해야 함!
+spec:
+  selector:
+    app: fastapi-user
+  ports:
+  - protocol: TCP
+    port: 8000
+    targetPort: 8000
+
+---
+# 3. Market Service
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deploy-fastapi-market
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fastapi-market
+  template:
+    metadata:
+      labels:
+        app: fastapi-market
+    spec:
+      containers:
+      - name: fastapi-market
+        image: myoli999/micro-market:1.0
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc-fastapi-market
+spec:
+  selector:
+    app: fastapi-market
+  ports:
+  - protocol: TCP
+    port: 8000
+    targetPort: 8000
+
+---
+# 4. Posts Service
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deploy-fastapi-posts
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fastapi-posts
+  template:
+    metadata:
+      labels:
+        app: fastapi-posts
+    spec:
+      containers:
+      - name: fastapi-posts
+        image: myoli999/micro-posts:1.0
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc-fastapi-posts
+spec:
+  selector:
+    app: fastapi-posts
+  ports:
+  - protocol: TCP
+    port: 8000
+    targetPort: 8000
