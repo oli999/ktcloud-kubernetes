@@ -10,7 +10,7 @@ spec:
   # 배포한 ingress-controller 와 연결고리가 되는 ingressClassName: nginx
   ingressClassName: nginx
   rules:
-  - host: argocd.cloud-study.site
+  - host: argocd.cloud-learning.site
     http:
       paths:
       - path: /
