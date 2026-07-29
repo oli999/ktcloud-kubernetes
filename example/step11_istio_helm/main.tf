@@ -57,3 +57,18 @@ resource "helm_release" "istio_ingress" {
     value = "ClusterIP"
   }
 }
+
+# 4. micro 네임스페이스 생성 및 Istio 사이드카 자동 주입 설정
+resource "kubernetes_namespace" "micro" {
+  metadata {
+    name = "micro"
+    
+    # kubectl label namespace micro istio-injection=enabled 와 동일한 역할
+    labels = {
+      istio-injection = "enabled"
+    }
+  }
+  
+  # Istio 컨트롤 플레인이 완전히 뜬 다음에 네임스페이스를 생성/설정하도록 의존성 부여
+  depends_on = [helm_release.istiod]
+}
