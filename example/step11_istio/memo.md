@@ -35,7 +35,10 @@ Istio는 크게 두 가지를 순서대로 설치해야 합니다.
 ```bash
 # 테라폼으로 Istio 설치가 끝났다면, 앞서 말씀드린 "사이드카 자동 주입" 라벨을 앱이 배포될 네임스페이스(예: default)에 반드시 붙여주셔야 합니다.
 
-kubectl label namespace default istio-injection=enabled
+kubectl label namespace default istio-injection=enabled --overwrite
+
+# 이건 반대 동작
+# kubectl label namespace default istio-injection-
 
 #이 라벨이 붙어있어야, 나중에 FastAPI 파드들을 배포할 때 Istio가 몰래 Envoy 프록시(사이드카 컨테이너)를 파드 안에 쏙쏙 끼워 넣어 트래픽을 가로채고 검증할 수 있게 됩니다.
 ```
@@ -70,4 +73,36 @@ kubectl apply -f samples/addons/kiali.yaml
 kubectl patch svc kiali -n istio-system -p '{"spec": {"type": "LoadBalancer"}}'
 
 kubectl get svc kiali -n istio-system
+```
+
+### istiod 동작안하면 
+
+
+```bash
+# 재설치
+istioctl install --set profile=default -y
+# 리스타트
+kubectl rollout restart deploy -n micro
+``` 
+# Webhook 설정 확인: 주입 설정 자체가 클러스터에 잘 남아있는지 확인합니다.
+kubectl get mutatingwebhookconfigurations
+
+### istio 리셋 하는 방법
+
+```bash
+# 1. 자동 주입 라벨 제거
+kubectl label namespace micro istio-injection- && \
+# 2. Istio 완전 삭제
+istioctl uninstall --purge -y && \
+# 3. Istio 네임스페이스 삭제 (에러 무시)
+kubectl delete namespace istio-system --ignore-not-found=true && \
+# 4. 기존 파드들 재시작 (사이드카 떼어내기)
+kubectl rollout restart deploy -n micro
+```
+
+
+### ClusterIP 로 설정
+
+```bash
+kubectl patch svc istio-ingressgateway -n istio-system -p '{"spec": {"type": "ClusterIP"}}'
 ```

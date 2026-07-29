@@ -3,12 +3,14 @@ apiVersion: security.istio.io/v1beta1
 kind: RequestAuthentication
 metadata:
   name: jwt-auth
+  namespace: micro      # 🌟 1. 네임스페이스 추가
 spec:
-  # 전체 네임스페이스에 적용
   jwtRules:
+  # 🚨 주의: issuer는 Python 코드에서 토큰을 만들 때 넣은 'iss' 값과 글자 하나까지 완벽히 똑같아야 합니다.
   - issuer: "http://svc-fastapi-user:8000/user/login"
-    jwksUri: "http://svc-fastapi-user.default.svc.cluster.local:8000/user/.well-known/jwks.json"
-    # 🚨 토큰 헤더에서 'Bearer ' 문자를 제대로 떼어내어 인식하도록 명시
+    
+    # 🌟 2. [매우 중요!] jwksUri의 FQDN 주소 중간에 있던 'default'를 'micro'로 변경했습니다.
+    jwksUri: "http://svc-fastapi-user.micro.svc.cluster.local:8000/user/.well-known/jwks.json"
     
 ---
 # 2. 인가(권한) 정책: "어떤 경로는 허용하고, 어떤 경로는 토큰을 강제할지 결정"
@@ -16,6 +18,7 @@ apiVersion: security.istio.io/v1beta1
 kind: AuthorizationPolicy
 metadata:
   name: msa-auth-policy
+  namespace: micro      # 🌟 1. 네임스페이스 추가
 spec:
   action: ALLOW
   rules:

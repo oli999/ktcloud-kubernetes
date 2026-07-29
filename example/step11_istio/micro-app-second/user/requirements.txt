@@ -3,3 +3,4 @@ uvicorn
 pyjwt
 requests
 cryptography
+authlib
