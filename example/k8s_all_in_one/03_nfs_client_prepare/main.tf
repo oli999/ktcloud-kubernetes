@@ -37,6 +37,7 @@ resource "helm_release" "nfs_client" {
   chart      = "nfs-subdir-external-provisioner"
   version    = "4.0.18" 
   namespace  = "kube-system"
+  # 설치 옵션은 nfs-values.yaml 파일의 내용대로 지정하겠다 
   values = [
     file("${path.module}/nfs-values.yaml")
   ]
