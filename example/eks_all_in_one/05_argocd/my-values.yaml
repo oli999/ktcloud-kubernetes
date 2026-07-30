@@ -8,3 +8,8 @@ server:
   # cloudflared 또는 route53 을 거쳐서 https 처리는 다되어서 들어오기 때문에 --insecure 로 설정한다 
   extraArgs:
     - --insecure
+config:
+  # github 에서 웹 hook 을 보낼때 사용할 token 설정 
+  secret:
+    extra:
+      webhook.github.secret: "my-token"
