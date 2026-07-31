@@ -1,0 +1,9 @@
+# argocd-values.yaml 파일 
+server:
+  service:
+    # 실습시 cloudflared ingress 를 사용하면 ClusterIP -> https://argocd.cloud-learning.site  형식으로 접속한다
+    # 대신 위의 형식대로 사용하려면 cloudflared ingress 의 main.tf 를  적절한 형식으로 수정해야 한다 
+    # 사용하지 않으면 LoadBalancer 로 설정한다 ->  http://172.16.8.x  형식으로 접속한다 
+    type: LoadBalancer
+  extraArgs:
+    - --insecure
