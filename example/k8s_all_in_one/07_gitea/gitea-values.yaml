@@ -22,7 +22,7 @@ service:
 gitea:
   admin:
     username: "admin"
-    password: "@admin1234"
+    password: "admin1234"
   config:
     server:
       # 웹 브라우저 화면에 표시될 기본 도메인과 깃 클론용 SSH 주소를 우리 로드밸런서 IP로 강제 지정!
