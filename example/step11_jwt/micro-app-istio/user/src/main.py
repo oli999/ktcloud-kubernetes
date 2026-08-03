@@ -40,11 +40,17 @@ def generate_user_token(data: dict = Body(...)):
     username = data.get("userName", "Unknown")
     
     header = {'alg': 'RS256', 'kid': KEY_ID}
+
+    # 토큰에 담을 정보를 구성한다  
+    # sub : 주제 (client 의 id, username )
+    # exp : 유효기간
+    # iss : 발급주체 
+    # role : 역활, 권한 (role 에 따라서 사용할수 있는 서비스의 종류가 다르다 , 서비스내에서의 권한도 다르다 )
     payload = {
         "sub": username,
         "exp": int((datetime.now(timezone.utc) + timedelta(hours=24)).timestamp()),
         "iss": "http://svc-fastapi-user:8000/user/login", 
-        "role": "수강생"
+        "role": "admin" # admin, staff, user 
     }
     
     # 토큰 서명 후 문자열(utf-8)로 디코딩
