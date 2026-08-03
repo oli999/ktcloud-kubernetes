@@ -88,3 +88,16 @@ istiod-revision-tag-default   ClusterIP      10.109.109.181   <none>        1501
 
 ```
 <img src="./assets/image04.png">
+
+### token 검증 security 로 배포하기
+
+```bash
+# deploy 폴더 안에서 실행한다 
+kubectl apply -f msa-security.yaml
+```
+
+### istio 동작 확인하기
+
+<img src="./assets/image05.png">
+<hr>
+<img src="./assets/image06.png">
