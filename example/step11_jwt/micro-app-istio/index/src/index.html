@@ -34,6 +34,7 @@
 
         // [2] 이스티오 성벽  테스트 (헤더에 토큰 장전)
         async function callMeshService(path) {
+            // localStorage 에 user_token 이라는 키값으로 저장된 token 을 읽어온다. 
             const token = localStorage.getItem("user_token");
             const reqHeaders = { "Content-Type": "application/json" };
             
