@@ -56,6 +56,7 @@ kubectl create ns micro
 
 ```bash
 # micro 라는 namespace 에 만들어지는 모든 pod 에 sidecar 가 주입되도록 설정한다
+# micro 라는 namespace 에 약속된 이름의 label 을 추가해서 sidecar 가 주입되도록 한다 
 kubectl label namespace micro istio-injection=enabled --overwrite
 
 # 이건 반대동작 (sidecar 가 주입되지 않도록 한다)

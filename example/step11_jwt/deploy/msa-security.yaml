@@ -9,8 +9,9 @@ metadata:
 spec:
   jwtRules:
   # 주의: issuer는 Python 코드에서 토큰을 만들 때 넣은 'iss' 값과 글자 하나까지 완벽히 똑같아야 합니다.
+  # issurer 는 발급처의 이름이다 (마음대로 지을수 있지만 관례상 요청 url 을 적는다)
   - issuer: "http://svc-fastapi-user:8000/user/login"
-    
+    # 전달된 토큰이 유효한지 비교할 문자열을 받을 위치 (istio 가 사용할 uri) 
     jwksUri: "http://svc-fastapi-user.micro.svc.cluster.local:8000/user/.well-known/jwks.json"
     
 ---
@@ -32,6 +33,9 @@ spec:
   - from:
     - source:
         # RequestAuthentication이 검증을 통과시킨 주체만 통과
+        # 발급처/subject
+        # 발급처: http://svc-fastapi-user:8000/user/login
+        # subject: *
         requestPrincipals: ["http://svc-fastapi-user:8000/user/login/*"]
     to:
     - operation:
