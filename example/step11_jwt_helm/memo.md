@@ -9,3 +9,6 @@ istioctl uninstall --purge -y
 kubectl delete namespace istio-system
 ```
 
+### kiali 접속 정보 확인
+
+<img src="./assets/image.png">
