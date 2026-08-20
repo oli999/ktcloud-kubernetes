@@ -51,11 +51,9 @@ resource "helm_release" "istio_ingress" {
   namespace  = "istio-system"
   depends_on = [helm_release.istiod]
 
-  # istioctl의 --set components.ingressGateways[0].k8s.service.type=ClusterIP 와 동일한 역할
-  set {
-    name  = "service.type"
-    value = "ClusterIP" # 테스트를 위해 LoadBalancer 해도 된다 
-  }
+  values = [
+    file("${path.module}/istio-values.yaml")
+  ]
 }
 
 # 4. micro 네임스페이스 생성 및 Istio 사이드카 자동 주입 설정
@@ -119,7 +117,7 @@ resource "helm_release" "kiali" {
   
   # Istio 컨트롤 플레인과 Prometheus가 모두 뜬 이후에 설치되도록 의존성 부여
   depends_on = [helm_release.istiod, helm_release.prometheus]
-
+  #depends_on = [helm_release.istiod]
   # [중요] 로컬 테스트 환경에서 귀찮은 토큰 로그인 창을 안 띄우고 바로 접속(anonymous)
   set {
     name  = "auth.strategy"
@@ -136,80 +134,80 @@ resource "helm_release" "kiali" {
     value = "LoadBalancer"
   }
   # Kiali가 Grafana의 위치를 알 수 있도록 URL 연결
-  set {
-    name  = "external_services.grafana.in_cluster_url"
-    value = "http://grafana.istio-system.svc.cluster.local:80"
-  }
+  # set {
+  #   name  = "external_services.grafana.in_cluster_url"
+  #   value = "http://grafana.istio-system.svc.cluster.local:80"
+  # }
 
-  set {
-    name  = "external_services.grafana.url"
-    value = "http://grafana.istio-system.svc.cluster.local:80"
-  }
+  # set {
+  #   name  = "external_services.grafana.url"
+  #   value = "http://grafana.istio-system.svc.cluster.local:80"
+  # }
 }
 
 # -------------------------------------------------------------------------
 # 7. Grafana 설치 (시각화 및 알림 대시보드)
 # -------------------------------------------------------------------------
-resource "helm_release" "grafana" {
-  name       = "grafana"
-  repository = "https://grafana.github.io/helm-charts"
-  chart      = "grafana"
-  namespace  = "istio-system"
+# resource "helm_release" "grafana" {
+#   name       = "grafana"
+#   repository = "https://grafana.github.io/helm-charts"
+#   chart      = "grafana"
+#   namespace  = "istio-system"
 
-  # Prometheus가 먼저 떠 있어야 데이터를 끌어올 수 있음
-  depends_on = [helm_release.prometheus]
+#   # Prometheus가 먼저 떠 있어야 데이터를 끌어올 수 있음
+#   depends_on = [helm_release.prometheus]
 
-  # 웹 브라우저 접속을 위한 LoadBalancer 개방
-  set {
-    name  = "service.type"
-    value = "LoadBalancer"
-  }
+#   # 웹 브라우저 접속을 위한 LoadBalancer 개방
+#   set {
+#     name  = "service.type"
+#     value = "LoadBalancer"
+#   }
 
-  # 테스트 환경을 위한 admin 비밀번호 고정 (아이디: admin / 비밀번호: admin)
-  set {
-    name  = "adminPassword"
-    value = "admin"
-  }
+#   # 테스트 환경을 위한 admin 비밀번호 고정 (아이디: admin / 비밀번호: admin)
+#   set {
+#     name  = "adminPassword"
+#     value = "admin"
+#   }
 
-  values = [
-    <<-EOF
-    datasources:
-      datasources.yaml:
-        apiVersion: 1
-        datasources:
-        - name: Prometheus
-          type: prometheus
-          url: http://prometheus-server.istio-system.svc.cluster.local:80
-          access: proxy
-          isDefault: true
+#   values = [
+#     <<-EOF
+#     datasources:
+#       datasources.yaml:
+#         apiVersion: 1
+#         datasources:
+#         - name: Prometheus
+#           type: prometheus
+#           url: http://prometheus-server.istio-system.svc.cluster.local:80
+#           access: proxy
+#           isDefault: true
           
-    dashboardProviders:
-      dashboardproviders.yaml:
-        apiVersion: 1
-        providers:
-        - name: 'istio'
-          orgId: 1
-          folder: 'istio'
-          type: file
-          disableDeletion: false
-          editable: true
-          options:
-            path: /var/lib/grafana/dashboards/istio
+#     dashboardProviders:
+#       dashboardproviders.yaml:
+#         apiVersion: 1
+#         providers:
+#         - name: 'istio'
+#           orgId: 1
+#           folder: 'istio'
+#           type: file
+#           disableDeletion: false
+#           editable: true
+#           options:
+#             path: /var/lib/grafana/dashboards/istio
             
-    dashboards:
-      istio:
-        istio-mesh:
-          gnetId: 7639
-          revision: 158
-          datasource: Prometheus
-        istio-service:
-          gnetId: 7636
-          revision: 158
-          datasource: Prometheus
-        istio-workload:
-          gnetId: 7630
-          revision: 158
-          datasource: Prometheus
-    EOF
-  ]
-}
+#     dashboards:
+#       istio:
+#         istio-mesh:
+#           gnetId: 7639
+#           revision: 158
+#           datasource: Prometheus
+#         istio-service:
+#           gnetId: 7636
+#           revision: 158
+#           datasource: Prometheus
+#         istio-workload:
+#           gnetId: 7630
+#           revision: 158
+#           datasource: Prometheus
+#     EOF
+#   ]
+# }
