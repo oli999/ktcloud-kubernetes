@@ -16,7 +16,7 @@ resource "argocd_application" "micro_app"{
             target_revision = "master"
             
             # 핵심: Chart.yaml이 위치한 폴더 경로를 지정합니다.
-            path            = "microservice"
+            path            = "microservice2"
             
             # (옵션) Helm 특정 설정이 필요할 때
             # helm {
