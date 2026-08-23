@@ -47,3 +47,21 @@ resource "helm_release" "argocd" {
     value = bcrypt("@admin1234") 
   }
 }
+
+# step11_jwt_helm2 예제에서 필요한 기능 추가 
+resource "helm_release" "argo_rollouts" {
+  name             = "argo-rollouts"
+  repository       = "https://argoproj.github.io/argo-helm"
+  chart            = "argo-rollouts"
+  namespace        = "argo-rollouts"
+  create_namespace = true # 자동으로 argo-rollouts 네임스페이스를 생성합니다.
+
+  # 버전 고정이 필요할 경우 아래 주석을 풀고 사용하세요.
+  # version = "2.38.0" 
+
+  # (선택) 웹 대시보드 활성화가 필요하다면 아래 설정을 추가합니다.
+  set {
+    name  = "dashboard.enabled"
+    value = "true"
+  }
+}
