@@ -37,18 +37,18 @@ resource "argocd_application" "micro_app"{
             # namespace 가 없는경우 자동으로 만들어 지도록   
             sync_options = ["CreateNamespace=true"]
         }
-        # 🌟 여기에 추가: Argo Rollouts가 조작하는 Istio 트래픽 라우팅 무시 설정
+        # Argo Rollouts가 조작하는 Istio 트래픽 라우팅 무시 설정
         ignore_difference {
             group         = "networking.istio.io"
             kind          = "VirtualService"
             json_pointers = [
                 "/spec/http/0/route",
-                "/spec/http/1/route", # 두 번째 경로 (예: market)
-                "/spec/http/2/route", # 세 번째 경로 (예: posts)
-                "/spec/http/3/route"  # 네 번째 경로 (예: user)
+                "/spec/http/1/route", 
+                "/spec/http/2/route", 
+                "/spec/http/3/route" 
             ]
         }
-        # 🌟 새로 추가: DestinationRule 서브셋 무시 설정! 🌟
+        # DestinationRule 서브셋 무시 설정
         ignore_difference {
             group         = "networking.istio.io"
             kind          = "DestinationRule"
